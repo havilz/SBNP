@@ -5,6 +5,6 @@ import { SbnpMapController } from './sbnp-map.controller';
 
 @Module({
   controllers: [SbnpController, SbnpMapController],
-  providers: [SbnpService]
+  providers: [SbnpService],
 })
 export class SbnpModule {}

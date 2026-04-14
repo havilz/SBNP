@@ -1,6 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IssueStatus } from '@prisma/client';
-import { IsDateString, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class CreateReportDto {
   @ApiProperty({ example: '5904', description: 'DSI (ID Station SBNP)' })
@@ -8,7 +17,10 @@ export class CreateReportDto {
   @IsNotEmpty()
   stationId: string;
 
-  @ApiProperty({ example: '2026-04-10T10:00:00Z', description: 'Tanggal laporan dibuat' })
+  @ApiProperty({
+    example: '2026-04-10T10:00:00Z',
+    description: 'Tanggal laporan dibuat',
+  })
   @IsDateString()
   @IsNotEmpty()
   reportedAt: string;

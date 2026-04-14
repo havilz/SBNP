@@ -1,7 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../common/providers/prisma.service';
 import { IssueStatus } from '@prisma/client';
-import { ISSUE_STATUS_MAPPING, MappedStatus } from '../../common/constants/status-mapping.constants';
+import {
+  ISSUE_STATUS_MAPPING,
+  MappedStatus,
+} from '../../common/constants/status-mapping.constants';
 import { CreateSBNPDto } from './dto/create-sbnp.dto';
 import { UpdateSBNPDto } from './dto/update-sbnp.dto';
 
@@ -72,7 +75,9 @@ export class SbnpService {
       },
       powerSource: station.powerSource,
       yearBuilt: station.yearBuilt,
-      latestStatus: this.mapStatus(lastReport?.issueStatus || IssueStatus.UNKNOWN),
+      latestStatus: this.mapStatus(
+        lastReport?.issueStatus || IssueStatus.UNKNOWN,
+      ),
       reports: station.reports.map((r) => ({
         reportedAt: r.reportedAt,
         issueStatus: r.issueStatus,

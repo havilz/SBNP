@@ -14,7 +14,9 @@ export class SbnpMapController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get detailed SBNP station data and report history' })
+  @ApiOperation({
+    summary: 'Get detailed SBNP station data and report history',
+  })
   async findOne(@Param('id') id: string) {
     return this.sbnpService.findOneWithHistory(id);
   }

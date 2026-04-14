@@ -1,5 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateSBNPDto {
   @ApiProperty({ example: '5904', description: 'DSI (ID Unik SBNP)' })
@@ -12,7 +18,10 @@ export class CreateSBNPDto {
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({ example: 1, description: 'ID Kategori SBNP (1: Menara Suar, dll)' })
+  @ApiProperty({
+    example: 1,
+    description: 'ID Kategori SBNP (1: Menara Suar, dll)',
+  })
   @IsInt()
   @IsNotEmpty()
   categoryId: number;

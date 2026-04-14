@@ -2,7 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../common/providers/prisma.service';
 import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
-import { ISSUE_STATUS_MAPPING, MappedStatus } from '../../common/constants/status-mapping.constants';
+import {
+  ISSUE_STATUS_MAPPING,
+  MappedStatus,
+} from '../../common/constants/status-mapping.constants';
 import { IssueStatus } from '@prisma/client';
 
 @Injectable()
@@ -18,7 +21,9 @@ export class ReportService {
     });
 
     if (!station) {
-      throw new NotFoundException(`Station with ID ${createDto.stationId} not found`);
+      throw new NotFoundException(
+        `Station with ID ${createDto.stationId} not found`,
+      );
     }
 
     return this.prisma.report.create({
@@ -39,7 +44,9 @@ export class ReportService {
       where: { id },
       data: {
         ...updateDto,
-        reportedAt: updateDto.reportedAt ? new Date(updateDto.reportedAt) : undefined,
+        reportedAt: updateDto.reportedAt
+          ? new Date(updateDto.reportedAt)
+          : undefined,
       },
     });
   }
