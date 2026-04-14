@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum StationType {
+  MENARA_SUAR
+  RAMBU_SUAR
+}
+
+enum IssueStatus {
+  NIHIL
+  PADAM
+  RUSAK_RINGAN
+  RUSAK_BERAT
+  UNKNOWN
+}
+
+model Station {
+  id           String        @id
+  name         String
+  type         StationType
+  latitude     Float
+  longitude    Float
+  powerSource  String?
+  yearBuilt    Int?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  reports Report[]
+
+  @@index([name])
+}
+
+model Report {
+  id             Int           @id @default(autoincrement())
+  stationId      String
+  reportedAt     DateTime      // kapan laporan dibuat
+  conditionPercent Int?
+  issueStatus    IssueStatus   @default(UNKNOWN)
+  issueDuration  Int?
+  issueCause     String?
+  note           String?
+  createdAt      DateTime      @default(now())
+
+  station Station @relation(fields: [stationId], references: [id], onDelete: Cascade)
+
+  @@index([stationId])
+  @@index([reportedAt])
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  username String   @unique
+  password String
+  role     String
+  createdAt DateTime @default(now())
+}
