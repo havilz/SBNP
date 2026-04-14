@@ -14,6 +14,7 @@ export class SbnpService {
   async findAllForMap() {
     const stations = await this.prisma.station.findMany({
       include: {
+        category: true,
         reports: {
           orderBy: { reportedAt: 'desc' },
           take: 1,
@@ -26,7 +27,7 @@ export class SbnpService {
       return {
         id: station.id,
         name: station.name,
-        type: station.type,
+        type: station.category.name, // Now taken from Category model
         coordinate: {
           lat: station.latitude,
           lng: station.longitude,
@@ -48,6 +49,7 @@ export class SbnpService {
     const station = await this.prisma.station.findUnique({
       where: { id },
       include: {
+        category: true,
         reports: {
           orderBy: { reportedAt: 'desc' },
         },
@@ -63,7 +65,7 @@ export class SbnpService {
     return {
       id: station.id,
       name: station.name,
-      type: station.type,
+      type: station.category.name,
       coordinate: {
         lat: station.latitude,
         lng: station.longitude,
