@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../common/providers/prisma.service';
 import { IssueStatus } from '@prisma/client';
+import { ISSUE_STATUS_MAPPING, MappedStatus } from '../../common/constants/status-mapping.constants';
 import { CreateSBNPDto } from './dto/create-sbnp.dto';
 import { UpdateSBNPDto } from './dto/update-sbnp.dto';
 
@@ -104,17 +105,9 @@ export class SbnpService {
 
   // --- Private Helpers ---
 
-  private mapStatus(rawStatus: IssueStatus) {
-    const mapping = {
-      [IssueStatus.NIHIL]: { label: 'NORMAL', color: 'green' },
-      [IssueStatus.PADAM]: { label: 'OFF', color: 'red' },
-      [IssueStatus.RUSAK_RINGAN]: { label: 'WARNING', color: 'orange' },
-      [IssueStatus.RUSAK_BERAT]: { label: 'CRITICAL', color: 'darkred' },
-      [IssueStatus.UNKNOWN]: { label: 'UNKNOWN', color: 'gray' },
-    };
-
+  private mapStatus(rawStatus: IssueStatus): MappedStatus {
     return {
-      ...mapping[rawStatus],
+      ...ISSUE_STATUS_MAPPING[rawStatus],
       raw: rawStatus,
     };
   }

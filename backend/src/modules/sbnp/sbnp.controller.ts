@@ -12,21 +12,19 @@ export class SbnpController {
   @Post()
   @ApiOperation({ summary: 'Create a new SBNP station' })
   async create(@Body() createSBNPDto: CreateSBNPDto) {
-    const data = await this.sbnpService.create(createSBNPDto);
-    return { data };
+    return this.sbnpService.create(createSBNPDto);
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Update an existing SBNP station' })
   async update(@Param('id') id: string, @Body() updateSBNPDto: UpdateSBNPDto) {
-    const data = await this.sbnpService.update(id, updateSBNPDto);
-    return { data };
+    return this.sbnpService.update(id, updateSBNPDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete an SBNP station' })
   async remove(@Param('id') id: string) {
     await this.sbnpService.remove(id);
-    return { data: { message: `SBNP ${id} deleted successfully` } };
+    return { message: `SBNP ${id} deleted successfully` };
   }
 }

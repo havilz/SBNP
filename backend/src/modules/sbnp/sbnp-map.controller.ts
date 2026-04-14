@@ -10,14 +10,12 @@ export class SbnpMapController {
   @Get()
   @ApiOperation({ summary: 'Get all SBNP stations for map visualization' })
   async findAll() {
-    const data = await this.sbnpService.findAllForMap();
-    return { data };
+    return this.sbnpService.findAllForMap();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get detailed SBNP station data and report history' })
   async findOne(@Param('id') id: string) {
-    const data = await this.sbnpService.findOneWithHistory(id);
-    return { data };
+    return this.sbnpService.findOneWithHistory(id);
   }
 }
