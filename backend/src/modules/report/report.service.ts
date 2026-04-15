@@ -78,7 +78,7 @@ export class ReportService {
   async findAllLatest() {
     // Get unique station IDs
     const stations = await this.prisma.station.findMany({
-      select: { id: true, name: true },
+      select: { id: true, name: true, latitude: true, longitude: true },
     });
 
     const latestReports = await Promise.all(
@@ -93,6 +93,8 @@ export class ReportService {
         return {
           ...report,
           stationName: station.name,
+          latitude: station.latitude,
+          longitude: station.longitude,
           status: this.mapStatus(report.issueStatus),
         };
       }),

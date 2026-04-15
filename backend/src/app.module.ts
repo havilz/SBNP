@@ -10,9 +10,15 @@ import { TelemetryModule } from './modules/telemetry/telemetry.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { EventsModule } from './modules/events/events.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', '..', 'frontend'),
+      renderPath: '/dashboard',
+    }),
     ScheduleModule.forRoot(),
     CommonModule,
     SbnpModule,
