@@ -1,11 +1,16 @@
-import { Controller, Post, Body, Put, Param, Delete } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { Controller, Post, Body, Put, Param, Delete, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { SbnpService } from './sbnp.service';
 import { CreateSBNPDto } from './dto/create-sbnp.dto';
 import { UpdateSBNPDto } from './dto/update-sbnp.dto';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @ApiTags('Admin - SBNP Management')
+@ApiBearerAuth()
 @Controller('sbnp')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class SbnpController {
   constructor(private readonly sbnpService: SbnpService) {}
 
@@ -22,7 +27,8 @@ export class SbnpController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete an SBNP station' })
+  @Roles('ADMIN')
+  @ApiOperation({ summary: 'Delete an SBNP station (Admin only)' })
   async remove(@Param('id') id: string) {
     await this.sbnpService.remove(id);
     return { message: `SBNP ${id} deleted successfully` };

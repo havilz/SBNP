@@ -1,9 +1,12 @@
-import { Controller, Get, Res } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { Controller, Get, Res, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { type Response } from 'express';
 import { ExportService } from './export.service';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 @ApiTags('Export')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('export')
 export class ExportController {
   constructor(private readonly exportService: ExportService) {}

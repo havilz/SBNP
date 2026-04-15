@@ -7,10 +7,14 @@ import {
   MappedStatus,
 } from '../../common/constants/status-mapping.constants';
 import { IssueStatus } from '@prisma/client';
+import { AppGateway } from '../events/app.gateway';
 
 @Injectable()
 export class ReportService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private eventsGateway: AppGateway,
+  ) {}
 
   // --- Admin Methods ---
 
@@ -26,12 +30,21 @@ export class ReportService {
       );
     }
 
-    return this.prisma.report.create({
+    const report = await this.prisma.report.create({
       data: {
         ...createDto,
         reportedAt: new Date(createDto.reportedAt),
       },
     });
+
+    // Broadcast update
+    this.eventsGateway.broadcastSbnpUpdate({
+      ...report,
+      stationName: station.name,
+      status: this.mapStatus(report.issueStatus),
+    });
+
+    return report;
   }
 
   async update(id: number, updateDto: UpdateReportDto) {

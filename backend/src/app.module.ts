@@ -7,6 +7,9 @@ import { SbnpModule } from './modules/sbnp/sbnp.module';
 import { ReportModule } from './modules/report/report.module';
 import { ExportModule } from './modules/export/export.module';
 import { TelemetryModule } from './modules/telemetry/telemetry.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
+import { EventsModule } from './modules/events/events.module';
 
 @Module({
   imports: [
@@ -16,6 +19,9 @@ import { TelemetryModule } from './modules/telemetry/telemetry.module';
     ReportModule,
     ExportModule,
     TelemetryModule,
+    AuthModule,
+    UserModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

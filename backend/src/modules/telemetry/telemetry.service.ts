@@ -2,12 +2,17 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
 import { PrismaService } from '../../common/providers/prisma.service';
 import { IssueStatus } from '@prisma/client';
+import { AppGateway } from '../events/app.gateway';
+import { ISSUE_STATUS_MAPPING } from '../../common/constants/status-mapping.constants';
 
 @Injectable()
 export class TelemetryService {
   private readonly logger = new Logger(TelemetryService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private eventsGateway: AppGateway,
+  ) {}
 
   @Interval(60000) // Run every 1 minute
   async handleSimulation() {
@@ -53,7 +58,7 @@ export class TelemetryService {
         }
 
         if (newStatus) {
-          await this.prisma.report.create({
+          const report = await this.prisma.report.create({
             data: {
               stationId: station.id,
               issueStatus: newStatus,
@@ -63,6 +68,17 @@ export class TelemetryService {
               reportedAt: new Date(),
             },
           });
+
+          // Broadcast real-time update
+          this.eventsGateway.broadcastSbnpUpdate({
+            ...report,
+            stationName: station.name,
+            status: {
+              ...ISSUE_STATUS_MAPPING[newStatus],
+              raw: newStatus,
+            },
+          });
+
           this.logger.log(
             `Status Change: ${station.name} (${station.id}) -> ${newStatus}`,
           );

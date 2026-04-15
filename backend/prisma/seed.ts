@@ -2,9 +2,10 @@ import { PrismaClient, IssueStatus } from '@prisma/client';
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as bcrypt from 'bcrypt';
 
 const adapter = new PrismaBetterSqlite3({
-    url: 'file:./prisma/dev.db',
+  url: 'file:./prisma/dev.db',
 });
 const prisma = new PrismaClient({ adapter });
 
@@ -13,6 +14,19 @@ async function main() {
   await prisma.report.deleteMany();
   await prisma.station.deleteMany();
   await prisma.category.deleteMany();
+  await prisma.user.deleteMany();
+
+  console.log('Seeding admin user...');
+  const salt = await bcrypt.genSalt();
+  const hashedPassword = await bcrypt.hash('admin_password_123', salt);
+
+  await prisma.user.create({
+    data: {
+      username: 'admin',
+      password: hashedPassword,
+      role: 'ADMIN',
+    },
+  });
 
   const dataPath = path.join(__dirname, 'data', 'stations_data.json');
   const rawData = fs.readFileSync(dataPath, 'utf-8');
