@@ -23,10 +23,6 @@ async function bootstrap() {
     }),
   );
 
-  // Global Interceptor & Filter
-  app.useGlobalInterceptors(new TransformInterceptor());
-  app.useGlobalFilters(new HttpExceptionFilter());
-
   // Swagger Setup
   const config = new DocumentBuilder()
     .setTitle('SBNP Monitoring System API')
