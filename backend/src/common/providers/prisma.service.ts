@@ -14,23 +14,25 @@ export class PrismaService
 
   constructor() {
     const dbUrl = process.env.DATABASE_URL || 'file:./prisma/dev.db';
+    const adapter = new PrismaBetterSqlite3({ url: dbUrl });
+
+    super({ adapter });
+
+    this.logger.log(`Menyambung ke Database: ${dbUrl}`);
 
     // Pastikan direktori database ada (Penting untuk Railway Volumes)
     if (dbUrl.startsWith('file:')) {
       const dbPath = dbUrl.replace('file:', '');
-      // Bersihkan path dari query params jika ada
       const cleanPath = dbPath.split('?')[0]; 
       const dbDir = path.dirname(path.isAbsolute(cleanPath) ? cleanPath : path.join(process.cwd(), cleanPath));
       
       if (!fs.existsSync(dbDir)) {
-        console.log(`[PrismaService] Membuat direktori database: ${dbDir}`);
+        this.logger.log(`Membuat direktori database baru di: ${dbDir}`);
         fs.mkdirSync(dbDir, { recursive: true });
+      } else {
+        this.logger.log(`Direktori database ditemukan: ${dbDir}`);
       }
     }
-
-    const adapter = new PrismaBetterSqlite3({ url: dbUrl });
-
-    super({ adapter });
   }
 
   async onModuleInit() {
