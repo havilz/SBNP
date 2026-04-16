@@ -4,8 +4,11 @@
 [phases.setup]
 nixPkgs = ["nodejs"]
 
+[phases.install]
+cmds = ["npm install"]
+
 [phases.build]
-cmds = ["npm install", "npx prisma generate", "npm run build"]
+cmds = ["npx prisma generate", "npm run build"]
 
 [start]
-cmd = "npm run start:prod"
+cmd = "npm run start"
