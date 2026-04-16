@@ -2,7 +2,9 @@ import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { join } from 'path';
+import * as fs from 'fs';
 
 import { AppController } from './common/controllers/app.controller';
 import { AppService } from './common/providers/app.service';
@@ -18,13 +20,27 @@ import { EventsModule } from './modules/events/events.module';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
+// Resolve frontend path
+const frontendPath = join(__dirname, '..', '..', '..', 'frontend');
+const hasFrontend = fs.existsSync(frontendPath);
+
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', '..', 'frontend'),
-      renderPath: '/dashboard',
-    }),
+    ...(hasFrontend
+      ? [
+          ServeStaticModule.forRoot({
+            rootPath: frontendPath,
+            renderPath: '/dashboard',
+          }),
+        ]
+      : []),
     ScheduleModule.forRoot(),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
     CommonModule,
     SbnpModule,
     ReportModule,

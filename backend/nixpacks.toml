@@ -1,0 +1,11 @@
+# Nixpacks configuration for SBNP Backend
+# Ensures proper build and start sequence on Railway
+
+[phases.setup]
+nixPkgs = ["nodejs"]
+
+[phases.build]
+cmds = ["npm install", "npx prisma generate", "npm run build"]
+
+[start]
+cmd = "npm run start:prod"

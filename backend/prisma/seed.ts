@@ -4,17 +4,18 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as bcrypt from 'bcrypt';
 
+const dbUrl = process.env.DATABASE_URL || 'file:./prisma/dev.db';
 const adapter = new PrismaBetterSqlite3({
-  url: 'file:./prisma/dev.db',
+  url: dbUrl,
 });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log('Clearing database...');
-  await prisma.report.deleteMany();
-  await prisma.station.deleteMany();
-  await prisma.category.deleteMany();
-  await prisma.user.deleteMany();
+  const userCount = await prisma.user.count();
+  if (userCount > 0) {
+    console.log('Database already has data. Skipping seed.');
+    return;
+  }
 
   console.log('Seeding admin user...');
   const salt = await bcrypt.genSalt();
