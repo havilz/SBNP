@@ -4,58 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SBNP Real-Time Monitoring Dashboard</title>
-    
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    
-    <!-- Custom Style -->
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a; /* maritime-dark base */
+            color: #475569;
+            font-family: system-ui, -apple-system, sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+        #root {
+            width: 100%;
+            height: 100%;
+        }
+        .initial-loader {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            gap: 16px;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(100, 255, 218, 0.1);
+            border-top: 3px solid #64ffda; /* maritime-accent */
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    <div class="dashboard">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h1>SBNP LIVE MONITOR</h1>
-                <p>Real-time status tracking via WebSocket</p>
-            </div>
-            <div id="liveFeed" class="live-feed">
-                <!-- Live items will appear here -->
-                <div class="feed-placeholder" style="padding: 20px; text-align: center; color: var(--text-secondary); font-size: 0.8rem;">
-                    Waiting for real-time updates...
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main id="map">
-            <!-- Map renders here -->
-        </main>
-
-        <!-- Stats Overlay -->
-        <div class="stats-overlay">
-            <div class="stat-card">
-                <span class="label">Total Units</span>
-                <span id="statTotal" class="value">0</span>
-            </div>
-            <div class="stat-card">
-                <span class="label">Normal</span>
-                <span id="statNormal" class="value success">0</span>
-            </div>
-            <div class="stat-card">
-                <span class="label">Off/Padam</span>
-                <span id="statOff" class="value danger">0</span>
+    <div id="root">
+        <!-- Rendered while React is loading -->
+        <div class="initial-loader">
+            <div class="spinner"></div>
+            <div style="font-weight: 600; letter-spacing: 1px; font-size: 14px; color: #94a3b8;">
+                INISIALISASI SBNP MONITOR...
             </div>
         </div>
     </div>
-
-    <!-- Socket.io Client -->
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    
-    <!-- App Logic -->
-    <script src="js/app.js"></script>
+    <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
