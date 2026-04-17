@@ -26,8 +26,9 @@ const getCachedUser = (): UserInfo | null => {
 
 export const useAuthStore = create<AuthState>((set) => ({
   // Inisialisasi mengecek apakah token sudah ada di memori persistent (localStorage)
-  isAuthenticated: !!localStorage.getItem("sbnp_admin_token"),
-  token: localStorage.getItem("sbnp_admin_token"),
+  // Tambahkan pengecekan agar string "undefined" tidak dianggap token valid
+  isAuthenticated: !!localStorage.getItem("sbnp_admin_token") && localStorage.getItem("sbnp_admin_token") !== "undefined",
+  token: localStorage.getItem("sbnp_admin_token") === "undefined" ? null : localStorage.getItem("sbnp_admin_token"),
   user: getCachedUser(),
 
   login: (token, user) => {

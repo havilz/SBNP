@@ -13,10 +13,13 @@ export const apiClient = axios.create({
   },
 });
 
-// Interceptor for Request (Place for Auth Token in the future)
+// Interceptor for Request (Attaching JWT Auth Token)
 apiClient.interceptors.request.use(
   (req) => {
-    // Add logic like localStorage.getItem('token') here if needed
+    const token = localStorage.getItem("sbnp_admin_token");
+    if (token) {
+      req.headers.set('Authorization', `Bearer ${token}`);
+    }
     return req;
   },
   (error) => {

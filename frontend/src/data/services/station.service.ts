@@ -34,5 +34,44 @@ export const stationService = {
        console.error(`[StationService] Failed to fetch station ${id}:`, error);
        throw error;
     }
+  },
+
+  /**
+   * Admin: Create a new station.
+   */
+  async createStation(data: any): Promise<any> {
+    try {
+      const response = await apiClient.post("/sbnp", data);
+      return response.data;
+    } catch (error) {
+      console.error("[StationService] Failed to create station:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Admin: Update an existing station.
+   */
+  async updateStation(id: string, data: any): Promise<any> {
+    try {
+      const response = await apiClient.put(`/sbnp/${id}`, data);
+      return response.data;
+    } catch (error) {
+      console.error(`[StationService] Failed to update station ${id}:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Admin: Delete a station.
+   */
+  async deleteStation(id: string): Promise<any> {
+    try {
+      const response = await apiClient.delete(`/sbnp/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`[StationService] Failed to delete station ${id}:`, error);
+      throw error;
+    }
   }
 };

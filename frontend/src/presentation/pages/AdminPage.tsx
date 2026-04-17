@@ -2,65 +2,82 @@ import React from "react";
 import { LogOut, ShieldAlert, Home } from "lucide-react";
 import { useAuthStore } from "../state/auth.store";
 import { useNavigate } from "react-router-dom";
+import AdminSidebar, { AdminTab } from "../components/AdminSidebar";
+import StationsView from "../components/StationsView";
+import UsersView from "../components/UsersView";
+import ReportsView from "../components/ReportsView";
+import ExportView from "../components/ExportView";
 
 const AdminPage: React.FC = () => {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = React.useState<AdminTab>("stations");
 
   const handleLogout = () => {
     logout();
     navigate("/");
   };
 
-  const goToDashboard = () => {
-    navigate("/");
+  const renderContent = () => {
+    switch (activeTab) {
+      case "stations":
+        return <StationsView />;
+      case "reports":
+        return <ReportsView />;
+      case "users":
+        return <UsersView />;
+      case "export":
+        return <ExportView />;
+      default:
+        return null;
+    }
   };
 
   return (
-    <div className="flex flex-col h-screen bg-maritime-dark text-white p-8">
+    <div className="flex flex-col h-screen bg-maritime-dark text-white p-6 gap-6">
       
-      <header className="flex justify-between items-center bg-maritime-blue p-6 rounded-2xl border border-maritime-light mb-8 shadow-xl">
+      {/* Header */}
+      <header className="flex justify-between items-center bg-maritime-blue p-5 rounded-2xl border border-maritime-light shadow-xl shrink-0">
         <div className="flex items-center gap-4">
-          <div className="bg-maritime-accent/20 p-3 rounded-xl border border-maritime-accent/30 text-maritime-accent">
-            <ShieldAlert size={32} />
+          <div className="bg-maritime-accent/10 p-2.5 rounded-xl border border-maritime-accent/20 text-maritime-accent">
+            <ShieldAlert size={28} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">SBNP Admin Panel</h1>
-            <p className="text-maritime-gray text-sm mt-1">Logged in as: <span className="text-white font-semibold">{user?.username}</span> [{user?.role}]</p>
+            <h1 className="text-xl font-bold tracking-tight">SBNP Admin Panel</h1>
+            <p className="text-maritime-gray text-xs mt-0.5">Logged in as: <span className="text-white font-semibold">{user?.username}</span></p>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <button 
-            onClick={goToDashboard}
-            className="flex items-center gap-2 px-4 py-2 bg-black/30 hover:bg-maritime-light rounded-lg transition-colors border border-transparent hover:border-maritime-gray"
+            onClick={() => navigate("/")}
+            className="flex items-center gap-2 px-4 py-2 text-sm bg-black/30 hover:bg-maritime-light rounded-xl transition-all border border-transparent hover:border-maritime-gray"
           >
-            <Home size={18} />
-            Monitoring Dashboard
+            <Home size={16} />
+            Dashboard
           </button>
           
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 bg-status-off/10 text-status-off hover:bg-status-off/20 border border-status-off/30 hover:border-status-off/50 rounded-lg transition-all"
+            className="flex items-center gap-2 px-4 py-2 text-sm bg-status-off/10 text-status-off hover:bg-status-off/20 border border-status-off/20 rounded-xl transition-all"
           >
-            <LogOut size={18} />
+            <LogOut size={16} />
             Logout
           </button>
         </div>
       </header>
 
-      <main className="flex-1 bg-maritime-blue border border-maritime-light rounded-2xl p-8 flex items-center justify-center flex-col relative overflow-hidden">
-        {/* Placeholder Content */}
-        <div className="text-center space-y-4 relative z-10">
-          <ShieldAlert size={64} className="mx-auto text-maritime-gray/30" />
-          <h2 className="text-3xl font-bold text-maritime-gray/50">Maintenance Area</h2>
-          <p className="text-maritime-gray/40 max-w-lg mx-auto">
-            Halaman ini didedikasikan khusus untuk pengaturan alat SBNP, data mentah, dan konfigurasi sistem (akan dikembangkan pada fase berikutnya).
-          </p>
-        </div>
-
-
-      </main>
+      {/* Main Content Area */}
+      <div className="flex-1 flex gap-6 min-h-0">
+        <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        
+        <main className="flex-1 bg-maritime-blue border border-maritime-light rounded-2xl p-8 flex flex-col relative overflow-hidden shadow-2xl">
+          {/* Content will be dynamic */}
+          <div className="flex-1 overflow-y-auto">
+            {renderContent()}
+          </div>
+        </main>
+      </div>
 
     </div>
   );

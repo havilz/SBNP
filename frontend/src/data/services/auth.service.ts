@@ -19,6 +19,7 @@ export const authService = {
       password,
     });
 
-    return response.data;
+    // Extract data from NestJS TransformInterceptor wrapper if present
+    return (response.data as any).data || response.data;
   },
 };
